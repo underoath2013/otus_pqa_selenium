@@ -11,8 +11,7 @@ def test_check_title(browser, url):
 
 def test_check_logo(browser, url):
     browser.get(url)
-    logo = WebDriverWait(browser, 3).until(EC.visibility_of_element_located((MainPage.LOGO)))
-    assert logo.is_displayed()
+    WebDriverWait(browser, 3).until(EC.visibility_of_element_located((MainPage.LOGO)))
 
 
 def test_items_navigation_bar(browser, url):

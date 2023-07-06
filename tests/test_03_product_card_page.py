@@ -10,20 +10,18 @@ def test_check_title(browser, url):
 
 def test_check_dropdown_menu(browser, url):
     browser.get(url + "/desktops/macbook")
-    dropdown_menu = WebDriverWait(browser, 3).until(EC.visibility_of_element_located(CardPage.DESKTOP_MENU))
-    assert dropdown_menu.is_displayed()
+    WebDriverWait(browser, 3).until(EC.visibility_of_element_located(CardPage.DESKTOP_MENU))
 
 
 def test_add_to_cart_button(browser, url):
     browser.get(url + "/desktops/macbook")
-    add_to_cart_button = WebDriverWait(browser, 3).until(EC.visibility_of_element_located(CardPage.ADD_TO_CART_BUTTON))
-    assert add_to_cart_button.is_displayed()
+    WebDriverWait(browser, 3).until(EC.visibility_of_element_located(CardPage.ADD_TO_CART_BUTTON))
 
 
 def test_add_to_wish_list(browser, url):
     browser.get(url + "/desktops/macbook")
-    add_to_cart_button = WebDriverWait(browser, 3).until(EC.visibility_of_element_located(CardPage.ADD_TO_WISH_LIST))
-    assert add_to_cart_button.is_displayed()
+    WebDriverWait(browser, 3).until(EC.visibility_of_element_located(CardPage.ADD_TO_WISH_LIST))
+    
 
 def test_check_tabs(browser, url):
     browser.get(url + "/desktops/macbook")

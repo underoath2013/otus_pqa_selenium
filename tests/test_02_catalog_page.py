@@ -10,8 +10,7 @@ def test_check_title(browser, url):
 
 def test_check_logo(browser, url):
     browser.get(url + "/desktops")
-    logo = WebDriverWait(browser, 3).until(EC.visibility_of_element_located((CatalogPage.LOGO)))
-    assert logo.is_displayed()
+    WebDriverWait(browser, 3).until(EC.visibility_of_element_located((CatalogPage.LOGO)))
 
 
 def test_elements_in_top_rigth_navigation_bar(browser, url):

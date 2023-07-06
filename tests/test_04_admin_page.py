@@ -21,8 +21,7 @@ def test_check_footer(browser, url):
 
 def test_check_logo(browser, url):
     browser.get(url + "/admin")
-    logo = WebDriverWait(browser, 5).until(EC.visibility_of_element_located(AdminPage.LOGO))
-    assert logo.is_displayed()
+    WebDriverWait(browser, 5).until(EC.visibility_of_element_located(AdminPage.LOGO))
 
 
 @pytest.mark.xfail(reason="Test currently fails with assert 422.0 == (845 / 2)")
