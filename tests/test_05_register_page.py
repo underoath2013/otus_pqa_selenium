@@ -1,57 +1,60 @@
-from page_objects import RegisterPage
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from page_objects.register_page import RegisterPage
+from time import sleep
+# refactored tests start
 
 
-def test_check_title(browser, url):
-    browser.get(url + "/index.php?route=account/register")
-    WebDriverWait(browser, 3).until(EC.title_is("Register Account"))
+def test_check_title_register_page(driver, url):
+    register_page = RegisterPage(driver)
+    register_page.open(url)
+    register_page.verify_title("Register Account")
 
 
-def test_input_field_firstname(browser, url):
-    expected_field = ["First Name"]
-    browser.get(url + "/index.php?route=account/register")
-    input_field = WebDriverWait(browser, 3).until(EC.visibility_of_all_elements_located((RegisterPage.FIRSTNAME)))
-    for field, input_element in zip(expected_field, input_field):
-        assert input_element.is_displayed(), f"{field} is not visible."
+def test_input_field_firstname(driver, url):
+    register_page = RegisterPage(driver)
+    register_page.open(url)
+    assert "First Name" == register_page.firstname_input_field()
 
 
-def test_input_field_lastname(browser, url):
-    expected_field = ["Last Name"]
-    browser.get(url + "/index.php?route=account/register")
-    input_field = WebDriverWait(browser, 3).until(EC.visibility_of_all_elements_located((RegisterPage.LASTNAME)))
-    for field, input_element in zip(expected_field, input_field):
-        assert input_element.is_displayed(), f"{field} is not visible."
+def test_input_field_lastname(driver, url):
+    register_page = RegisterPage(driver)
+    register_page.open(url)
+    assert "Last Name" == register_page.lastname_input_field()
 
 
-def test_input_field_email(browser, url):
-    expected_field = ["E-Mail"]
-    browser.get(url + "/index.php?route=account/register")
-    input_field = WebDriverWait(browser, 3).until(EC.visibility_of_all_elements_located((RegisterPage.EMAIL)))
-    for field, input_element in zip(expected_field, input_field):
-        assert input_element.is_displayed(), f"{field} is not visible."
+def test_input_field_email(driver, url):
+    register_page = RegisterPage(driver)
+    register_page.open(url)
+    assert "E-Mail" == register_page.email_input_field()
 
 
-def test_input_field_telephone(browser, url):
-    expected_field = ["Telephone"]
-    browser.get(url + "/index.php?route=account/register")
-    input_field = WebDriverWait(browser, 3).until(EC.visibility_of_all_elements_located((RegisterPage.TELEPHONE)))
-    for field, input_element in zip(expected_field, input_field):
-        assert input_element.is_displayed(), f"{field} is not visible."
+def test_input_field_telephone(driver, url):
+    register_page = RegisterPage(driver)
+    register_page.open(url)
+    assert "Telephone" == register_page.telephone_input_field()
 
 
-def test_input_field_password(browser, url):
-    expected_field = ["Password"]
-    browser.get(url + "/index.php?route=account/register")
-    input_field = WebDriverWait(browser, 3).until(EC.visibility_of_all_elements_located((RegisterPage.PASSWORD)))
-    for field, input_element in zip(expected_field, input_field):
-        assert input_element.is_displayed(), f"{field} is not visible."
+def test_input_field_password(driver, url):
+    register_page = RegisterPage(driver)
+    register_page.open(url)
+    assert "Password" == register_page.password_input_field()
 
 
-def test_input_field_password_confirm(browser, url):
-    expected_field = ["Password Confirm"]
-    browser.get(url + "/index.php?route=account/register")
-    input_field = WebDriverWait(browser, 3).until(
-        EC.visibility_of_all_elements_located((RegisterPage.PASSWORD_CONFIRM)))
-    for field, input_element in zip(expected_field, input_field):
-        assert input_element.is_displayed(), f"{field} is not visible."
+def test_input_field_password_confirm(driver, url):
+    register_page = RegisterPage(driver)
+    register_page.open(url)
+    assert "Password Confirm" == register_page.password_confirm_input_field()
+# refactored tests end
+
+
+def test_register_new_user(driver, url):
+    register_page = RegisterPage(driver)
+    register_page.open(url)
+    register_page.input(register_page.find_firstname_input(), "Ivan")
+    register_page.input(register_page.find_lastname_input(), "Ivanov")
+    register_page.input(register_page.find_email_input(), "123@gmail.com")
+    register_page.input(register_page.find_telephone_input(), "+79991234567")
+    register_page.input(register_page.find_password_input(), "qwerty")
+    register_page.input(register_page.find_password_confirm_input(), "qwerty")
+    register_page.confirm_privacy_policy()
+    register_page.click_continue_button()
+    assert register_page.find_created_account_text() == "Your Account Has Been Created!"

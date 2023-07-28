@@ -17,7 +17,7 @@ def url(request):
 
 
 @pytest.fixture
-def browser(request):
+def driver(request):
     browser_name = request.config.getoption("--browser")
     maximize = request.config.getoption("--maximize")
     headless = request.config.getoption("--headless")
