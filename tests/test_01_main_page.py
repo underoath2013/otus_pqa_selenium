@@ -1,46 +1,77 @@
-from page_objects import MainPage
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
+from page_objects.main_page import MainPage
+from time import sleep
+# refactored tests start
 
 
-def test_check_title(browser, url):
-    browser.get(url)
-    WebDriverWait(browser, 3).until(EC.title_is("Your Store"))
+def test_check_title(driver, url):
+    main_page = MainPage(driver)
+    main_page.open(url)
+    main_page.verify_title("Your Store")
 
 
-def test_check_logo(browser, url):
-    browser.get(url)
-    WebDriverWait(browser, 3).until(EC.visibility_of_element_located((MainPage.LOGO)))
+def test_check_logo(driver, url):
+    main_page = MainPage(driver)
+    main_page.open(url)
+    main_page.find_logo()
 
 
-def test_items_navigation_bar(browser, url):
-    navigation_bar_items = ["Desktops", "Laptops & Notebooks", "Components",
-                            "Tablets", "Software", "Phones & PDAs", "Cameras", "MP3 Players"]
-    browser.get(url)
-    navigation_bar = WebDriverWait(browser, 3).until(EC.visibility_of_all_elements_located((MainPage.NAVIGATION_BAR)))
+def test_items_navigation_bar(driver, url):
+    expected_navigation_bar_items = ["Desktops", "Laptops & Notebooks", "Components",
+                                     "Tablets", "Software", "Phones & PDAs", "Cameras", "MP3 Players"]
+    main_page = MainPage(driver)
+    main_page.open(url)
+    navigation_bar = main_page.find_navigation_bar()
+    navigation_bar_items_text = main_page.find_navigation_bar_items_text(navigation_bar)
     assert len(navigation_bar) == 8, "Wrong items quantity in navigation bar"
-    for element in navigation_bar:
-        assert element.text in navigation_bar_items, f"Unexpected item in navigation bar: {element.text}"
+    assert navigation_bar_items_text == expected_navigation_bar_items, f"Unexpected item in navigation bar"
 
 
-def test_search_field_button(browser, url):
+def test_search_field_button(driver, url):
     search_input = "Macbook"
-    browser.get(url)
-    search_field = WebDriverWait(browser, 3).until(EC.visibility_of_element_located((MainPage.SEARCH_INPUT)))
-    search_field.click()
-    search_field.clear()
-    search_field.send_keys(search_input)
-    search_button = WebDriverWait(browser, 3).until(EC.element_to_be_clickable((MainPage.SEARCH_BUTTON)))
-    search_button.click()
-    WebDriverWait(browser, 5).until(EC.title_contains(search_input))
+    main_page = MainPage(driver)
+    main_page.open(url)
+    search_field = main_page.find_search_input_field()
+    main_page.input(search_field, search_input)
+    main_page.click_search_button()
+    main_page.title_contains(search_input)
 
 
-def test_featured_items(browser, url):
-    featured_item_titles = ['MacBook', 'iPhone', 'Apple Cinema 30"', 'Canon EOS 5D']
-    browser.get(url)
-    featured_items = WebDriverWait(browser, 3).until(EC.visibility_of_all_elements_located(MainPage.FEATURED))
+def test_featured_items(driver, url):
+    expected_featured_item_titles = ['MacBook', 'iPhone', 'Apple Cinema 30"', 'Canon EOS 5D']
+    main_page = MainPage(driver)
+    main_page.open(url)
+    featured_items = main_page.find_featured_items()
+    item_title = main_page.find_featured_item_titles(featured_items)
     assert len(featured_items) == 4, f"Expected 4 items in 'Featured', but found {len(featured_items)}"
-    for item in featured_items:
-        item_title = item.find_element(By.TAG_NAME, "h4").find_element(By.TAG_NAME, "a").text
-        assert item_title in featured_item_titles, f"Unexpected item in featured: {item_title}"
+    assert item_title in expected_featured_item_titles, f"Unexpected item in featured: {item_title}"
+# refactored tests end
+
+
+def test_switch_to_euro_currency(driver, url):
+    main_page = MainPage(driver)
+    main_page.open(url)
+    main_page.find_dropdown_button()
+    main_page.click_dropdown_button()
+    main_page.click_euro_button()
+    currency_symbol = main_page.find_currency_symbol_text()
+    assert currency_symbol == '€', f"Wrong currency symbol: {currency_symbol}"
+
+
+def test_switch_to_pound_currency(driver, url):
+    main_page = MainPage(driver)
+    main_page.open(url)
+    main_page.find_dropdown_button()
+    main_page.click_dropdown_button()
+    main_page.click_pound_button()
+    currency_symbol = main_page.find_currency_symbol_text()
+    assert currency_symbol == '£', f"Wrong currency symbol: {currency_symbol}"
+
+
+def test_switch_to_dollar_currency(driver, url):
+    main_page = MainPage(driver)
+    main_page.open(url)
+    main_page.find_dropdown_button()
+    main_page.click_dropdown_button()
+    main_page.click_dollar_button()
+    currency_symbol = main_page.find_currency_symbol_text()
+    assert currency_symbol == '$', f"Wrong currency symbol: {currency_symbol}"
