@@ -30,7 +30,7 @@ class AdminPage(BasePage):
     DELETE_BUTTON = (By.XPATH, "//button[@class='btn btn-danger']")
 
     def open(self, url):
-        self.driver.get(url + self.PATH)
+        self.open_url(url + self.PATH)
 
     def find_header(self):
         self.element(AdminPage.HEADER)

@@ -13,4 +13,8 @@ venv.bak/
 __pycache__/
 .pytest_cache/
 *log
+logs/
 
+# allure
+allure-results/
+allure-report/

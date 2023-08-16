@@ -1,5 +1,5 @@
 from page_objects.register_page import RegisterPage
-from time import sleep
+
 # refactored tests start
 
 

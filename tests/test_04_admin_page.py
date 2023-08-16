@@ -1,8 +1,7 @@
 from page_objects.admin_page import AdminPage
 import pytest
-from time import sleep
+
 # refactored tests start
-from selenium.webdriver.common.by import By
 
 
 def test_check_title(driver, url):

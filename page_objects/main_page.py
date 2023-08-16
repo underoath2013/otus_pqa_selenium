@@ -16,9 +16,6 @@ class MainPage(BasePage):
     POUND_BUTTON = (By.XPATH, "//button[@name='GBP']")
     CURRENCY_SYMBOL = (By.CSS_SELECTOR, "strong")
 
-    def open(self, url):
-        self.driver.get(url)
-
     def find_logo(self):
         self.element(MainPage.LOGO)
 

@@ -10,7 +10,7 @@ class CatalogPage(BasePage):
     IMAGES = (By.CSS_SELECTOR, '.product-layout .image img')
 
     def open(self, url):
-        self.driver.get(url + self.PATH)
+        self.open_url(url + self.PATH)
 
     def find_logo(self):
         self.element(CatalogPage.LOGO)
