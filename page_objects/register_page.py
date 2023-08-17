@@ -15,7 +15,7 @@ class RegisterPage(BasePage):
     CREATED_ACCOUNT_TEXT = (By.XPATH, "//h1[normalize-space()='Your Account Has Been Created!']")
 
     def open(self, url):
-        self.driver.get(url + self.PATH)
+        self.open_url(url + self.PATH)
 
     def firstname_input_field(self):
         first_name_field = self.element(RegisterPage.FIRSTNAME)

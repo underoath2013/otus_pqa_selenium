@@ -10,7 +10,7 @@ class CardPage(BasePage):
     NAVIGATION_TABS = (By.CSS_SELECTOR, 'ul.nav-tabs li a')
 
     def open(self, url):
-        self.driver.get(url + self.PATH)
+        self.open_url(url + self.PATH)
 
     def find_dropdown_menu(self):
         return self.element(CardPage.DESKTOP_MENU)
