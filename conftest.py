@@ -29,7 +29,7 @@ class Logger:
 
 def pytest_addoption(parser):
     parser.addoption("--browser", default="chrome", help="Available browsers: firefox, chrome")
-    parser.addoption("--url", default="http://192.168.0.103:8081", help="Base URL for the tests")
+    parser.addoption("--url", default="http://192.168.0.109:8081", help="Base URL for the tests")
     parser.addoption("--maximize", action="store_true", help="Maximize browser window")
     parser.addoption("--headless", action="store_true", help="Headless mode")
     parser.addoption("--log_level", choices=["INFO", "ERROR"],
@@ -57,32 +57,31 @@ def driver(request):
                 (request.node.name, datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')))
 
     # local execution
-    if browser_name == "firefox":
-        options = FirefoxOptions()
-        if headless:
-            options.headless = True
-        driver = webdriver.Firefox(options=options)
-    elif browser_name == "chrome":
-        service = Service()
-        options = ChromeOptions()
-        if headless:
-            options.add_argument("headless=new")
-        driver = webdriver.Chrome(service=service, options=options)
-    else:
-        raise ValueError(f"Driver {browser_name} not supported")
+    if not remote:
+        if browser_name == "firefox":
+            options = FirefoxOptions()
+            if headless:
+                options.headless = True
+            driver = webdriver.Firefox(options=options)
+        elif browser_name == "chrome":
+            service = Service()
+            options = ChromeOptions()
+            if headless:
+                options.add_argument("headless=new")
+            driver = webdriver.Chrome(service=service, options=options)
+        else:
+            raise ValueError(f"Driver {browser_name} not supported")
 
-    if maximize:
-        driver.maximize_window()
-
+    # remote execution with Selenoid
     if remote:
-        # remote execution with Selenoid
         if browser_name == "firefox":
             options = FirefoxOptions()
             options.browser_version = browser_version
             if headless:
                 options.headless = True
             driver = webdriver.Remote(
-                command_executor="http://127.0.0.1:4444/wd/hub",
+                # command_executor="http://127.0.0.1:4444/wd/hub",
+                command_executor="http://selenoid:4444/wd/hub",
                 options=options
             )
         elif browser_name == "chrome":
@@ -91,9 +90,13 @@ def driver(request):
             if headless:
                 options.add_argument("headless=new")
             driver = webdriver.Remote(
-                command_executor="http://127.0.0.1:4444/wd/hub",
+                # command_executor="http://127.0.0.1:4444/wd/hub",
+                command_executor="http://selenoid:4444/wd/hub",
                 options=options
             )
+
+    if maximize:
+        driver.maximize_window()
 
     driver.logger = logger
 
