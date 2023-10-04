@@ -36,6 +36,8 @@ def pytest_addoption(parser):
                      default="INFO", help="Set the log level (INFO, ERROR)")
     parser.addoption("--remote", action="store_true", help="Run tests remotely using Selenoid")
     parser.addoption("--bv", help="Browser version")
+    parser.addoption("--remote_url", default="http://selenoid:4444/wd/hub",
+                     help="Remote URL for Selenoid's command_executor")
 
 
 @pytest.fixture
@@ -51,6 +53,7 @@ def driver(request):
     headless = request.config.getoption("--headless")
     log_level = request.config.getoption("--log_level")
     remote = request.config.getoption("--remote")
+    remote_url = request.config.getoption("--remote_url")
 
     logger = Logger(request.node.name, log_level)
     logger.info("===> Test %s started at %s" %
@@ -80,8 +83,7 @@ def driver(request):
             if headless:
                 options.headless = True
             driver = webdriver.Remote(
-                # command_executor="http://127.0.0.1:4444/wd/hub",
-                command_executor="http://selenoid:4444/wd/hub",
+                command_executor=remote_url,
                 options=options
             )
         elif browser_name == "chrome":
@@ -90,8 +92,7 @@ def driver(request):
             if headless:
                 options.add_argument("headless=new")
             driver = webdriver.Remote(
-                # command_executor="http://127.0.0.1:4444/wd/hub",
-                command_executor="http://selenoid:4444/wd/hub",
+                command_executor=remote_url,
                 options=options
             )
 
